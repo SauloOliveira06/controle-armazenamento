@@ -11,6 +11,7 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { ContainerConfiguration } from "./styles";
 
 export const Configuracoes = () => {
   const { i18n, t } = useTranslation();
@@ -33,7 +34,7 @@ export const Configuracoes = () => {
   }, [i18n, language]);
 
   return (
-    <>
+    <ContainerConfiguration>      
       <Grid sx={{ flexGrow: 1 }} container spacing={8} marginTop={10}>
         <Grid item xs={12}>
           <Grid container justifyContent="center" spacing={8}>
@@ -41,15 +42,16 @@ export const Configuracoes = () => {
               <Paper
                 sx={{
                   height: "auto",
-                  width: 900,
+                  width: 700,
                   backgroundColor: (theme) =>
                     theme.palette.mode === "dark" ? "#282e34" : "#fff",
-                  padding: 3,
+                  padding: 5,
+                  borderRadius: "20px",
                 }}
                 children={
                   <>
                     <Box>
-                      <Typography variant="h5" gutterBottom fontWeight={400}>
+                      <Typography variant="h5" gutterBottom fontWeight={400} color={"#4c4c4c"}>
                         {t("settings")}:
                       </Typography>
                       <Box width={"80%"} paddingTop={3} paddingLeft={4}>
@@ -77,6 +79,6 @@ export const Configuracoes = () => {
           </Grid>
         </Grid>
       </Grid>
-    </>
+    </ContainerConfiguration>
   );
 };

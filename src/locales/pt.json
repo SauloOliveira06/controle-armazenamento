@@ -14,5 +14,6 @@
   "no": "NÃO",
   "cancel": "Cancelar",
   "apply": "Aplicar",
-  "info-the-value":"You must enter the percentage value for the respective station!"
+  "info-the-value":"You must enter the percentage value for the respective station!",
+  "success-collected": "Coleta feita com sucesso!"
 }

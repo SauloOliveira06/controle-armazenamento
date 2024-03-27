@@ -5,6 +5,9 @@ import { useEffect, useState } from "react";
 import {
   BackgroundOverlay,
   ButtonAction,
+  ButtonCancel,
+  ButtonDecline,
+  ContainerControlPanel,
   SuccessAnimationContainer,
 } from "./styles";
 import CustomModal from "../../components/modal";
@@ -33,18 +36,21 @@ export const PainelDeControle = () => {
           nomeEstacao: "Estação 1",
           progress: 0,
           volume: 0,
+          dataStation: "Estação 1",
         },
         {
           id: 2,
           nomeEstacao: "Estação 2",
           progress: 0,
           volume: 0,
+          dataStation: "Estação 2",
         },
         {
           id: 3,
           nomeEstacao: "Estação 3",
           progress: 0,
           volume: 0,
+          dataStation: "Estação 3",
         },
       ];
     }
@@ -82,7 +88,10 @@ export const PainelDeControle = () => {
     setValueStation(0);
   };
 
-  const handleUpdateColeta = (stationValue: number | undefined) => {
+  const handleUpdateColeta = (
+    stationValue: number | undefined,
+    dataStation: string
+  ) => {
     const updatedStations = stations.map((station) => {
       if (station.nomeEstacao === dataStation) {
         return {
@@ -112,18 +121,21 @@ export const PainelDeControle = () => {
           nomeEstacao: "Estação 1",
           progress: 0,
           volume: 0,
+          dataStation: "Estação 1",
         },
         {
           id: 2,
           nomeEstacao: "Estação 2",
           progress: 0,
           volume: 0,
+          dataStation: "Estação 2",
         },
         {
           id: 3,
           nomeEstacao: "Estação 3",
           progress: 0,
           volume: 0,
+          dataStation: "Estação 3",
         },
       ];
       setStations(defaultStations);
@@ -135,16 +147,18 @@ export const PainelDeControle = () => {
     localStorage.setItem("stations", JSON.stringify(stations));
   }, [stations]);
 
-  const handleConfirmColeta = () => {
+  const handleConfirmColeta = (dataStation: string) => {
     setColetaConfirmada(true);
 
     setTimeout(() => {
       setColetaConfirmada(false);
+      handleUpdateColeta(valueStation, dataStation);
     }, 3000);
   };
 
   return (
-    <>
+    <ContainerControlPanel>
+      <img src="/background-control-panel.png" alt="background-control" />
       <Grid sx={{ flexGrow: 1 }} container spacing={8} marginTop={10}>
         <Grid item xs={12}>
           <Grid container justifyContent="center" spacing={8}>
@@ -161,6 +175,7 @@ export const PainelDeControle = () => {
                     alignItems: "center",
                     flexDirection: "column",
                     boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
+                    borderRadius: "20px",
                   }}
                   children={
                     <>
@@ -184,7 +199,7 @@ export const PainelDeControle = () => {
                       >
                         <ButtonAction
                           variant="contained"
-                          onClick={() => handleOpenModal(value.nomeEstacao)}
+                          onClick={() => handleOpenModal(value.dataStation)}
                         >
                           {t("apply-value")}
                         </ButtonAction>
@@ -200,7 +215,9 @@ export const PainelDeControle = () => {
                         spacing={2}
                         border={"1px solid #c1c1c1"}
                       >
-                        <Alert severity="warning">{`Estação ${value.id} ${t("warning-message")}`}</Alert>
+                        <Alert severity="warning">{`Estação ${value.id} ${t(
+                          "warning-message"
+                        )}`}</Alert>
                       </Stack>
                       <Box
                         display={"flex"}
@@ -211,7 +228,7 @@ export const PainelDeControle = () => {
                           color="error"
                           variant="contained"
                           onClick={() =>
-                            handleOpenModalPedidoColeta(value.nomeEstacao)
+                            handleOpenModalPedidoColeta(value.dataStation)
                           }
                           fullWidth
                         >
@@ -250,9 +267,9 @@ export const PainelDeControle = () => {
               gap={"20px"}
               paddingTop={4}
             >
-              <Button variant="outlined" onClick={handleCloseModal}>
+              <ButtonCancel variant="outlined" onClick={handleCloseModal}>
                 {t("cancel")}
-              </Button>
+              </ButtonCancel>
               <ButtonAction variant="contained" onClick={handleSubmitValue}>
                 {t("apply")}
               </ButtonAction>
@@ -276,19 +293,19 @@ export const PainelDeControle = () => {
               gap={"20px"}
               paddingTop={4}
             >
-              <Button
+              <ButtonDecline
                 variant="contained"
                 color="error"
                 onClick={handleCloseModalColeta}
                 fullWidth
               >
                 {t("no")}
-              </Button>
+              </ButtonDecline>
               <ButtonAction
                 variant="contained"
                 onClick={() => {
-                  handleUpdateColeta(valueStation);
-                  handleConfirmColeta();
+                  handleUpdateColeta(valueStation, dataStationColeta);
+                  handleConfirmColeta(dataStationColeta);
                 }}
                 fullWidth
               >
@@ -320,11 +337,11 @@ export const PainelDeControle = () => {
               fontWeight={400}
               color={"#FFFFFF"}
             >
-              Coleta feita com sucesso!
+              {t("success-collected")}
             </Typography>
           </SuccessAnimationContainer>
         </>
       )}
-    </>
+    </ContainerControlPanel>
   );
 };

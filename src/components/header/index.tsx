@@ -9,7 +9,7 @@ export const Header = () => {
     <HeaderComponent>
       <Logo>
         <Link to="/">
-          <img src={"/recycle-3-svgrepo-com.svg"} alt="logo" />
+          <img src={"/recycle-5-svgrepo-com.svg"} alt="logo" />
         </Link>
       </Logo>
       <Box
@@ -22,7 +22,6 @@ export const Header = () => {
         className="content-link"
       >
         <Link to="/painel-controle">{t("control-panel")}</Link>
-        <Link to="/historico">{t("history")}</Link>
         <Link to="/configuracoes">{t("settings")}</Link>
       </Box>
     </HeaderComponent>

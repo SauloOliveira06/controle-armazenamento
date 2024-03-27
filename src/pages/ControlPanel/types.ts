@@ -3,4 +3,5 @@ export interface StationProps {
   nomeEstacao: string;
   progress: number;
   volume: number;
+  dataStation: string;
 }
