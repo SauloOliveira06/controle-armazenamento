@@ -1,0 +1,19 @@
+{
+  "settings": "Settings",
+  "control-panel": "Controle Panel",
+  "history": "History",
+  "select-language": "Select your language",
+  "warning-message": "is prepared for collection",
+  "station": "Station",
+  "apply-value": "Apply Value",
+  "request-collect": "Request Collect",
+  "confirm-collect": "Do you really want to collect",
+  "enter-value": "Enter the value for",
+  "value": "Value",
+  "yes": "YES",
+  "no": "NO",
+  "cancel": "Cancel",
+  "apply": "Apply",
+  "info-the-value":"You must enter the percentage value for the respective station!",
+  "success-collected": "Collection successful!"
+}

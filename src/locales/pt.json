@@ -1,0 +1,19 @@
+{
+  "settings": "Configurações",
+  "control-panel": "Painel de Controle",
+  "history": "Histórico",
+  "select-language": "Selecione seu idioma",
+  "warning-message": "está preparada para coleta",
+  "station": "Estação",
+  "apply-value": "Aplicar Valor",
+  "request-collect": "Gerar pedido de coleta",
+  "confirm-collect": "Deseja realmente fazer coleta da",
+  "enter-value": "Informe o valor para",
+  "value": "Valor",
+  "yes": "SIM",
+  "no": "NÃO",
+  "cancel": "Cancelar",
+  "apply": "Aplicar",
+  "info-the-value":"You must enter the percentage value for the respective station!",
+  "success-collected": "Coleta feita com sucesso!"
+}
