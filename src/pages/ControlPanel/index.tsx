@@ -1,6 +1,6 @@
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { Button, Grid, Paper, TextField } from "@mui/material";
+import { Alert, Button, Grid, Paper, Stack, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { ButtonAction } from "./styles";
 import CustomModal from "../../components/modal";
@@ -10,7 +10,9 @@ import { StationProps } from "./types";
 export const PainelDeControle = () => {
   const [openModal, setOpenModal] = useState(false);
   const [dataStation, setDataStation] = useState("");
+  const [dataStationColeta, setDataStationColeta] = useState("");
   const [valueStation, setValueStation] = useState<number>();
+  const [openModalPedidoColeta, setOpenModalPedidoColeta] = useState(false);
   const [stations, setStations] = useState<StationProps[]>(() => {
     const savedStations = JSON.parse(localStorage.getItem("stations") || "[]");
     if (savedStations.length > 0) {
@@ -39,12 +41,18 @@ export const PainelDeControle = () => {
     }
   });
 
-  const handleOpenModal = (event: string) => {
+  const handleOpenModal = (dataName: string) => {
     setOpenModal(true);
-    setDataStation(event);
+    setDataStation(dataName);
+  };
+
+  const handleOpenModalPedidoColeta = (dataName: string) => {
+    setOpenModalPedidoColeta(true);
+    setDataStationColeta(dataName);
   };
 
   const handleCloseModal = () => setOpenModal(false);
+  const handleCloseModalColeta = () => setOpenModalPedidoColeta(false);
 
   const handleSubmitValue = () => {
     const updatedStations = stations.map((station) => {
@@ -62,6 +70,25 @@ export const PainelDeControle = () => {
     localStorage.setItem("stations", JSON.stringify(updatedStations));
 
     setOpenModal(false);
+    setValueStation(0);
+  };
+
+  const handleUpdateColeta = (stationValue: number | undefined) => {
+    const updatedStations = stations.map((station) => {
+      if (station.nomeEstacao === dataStation) {
+        return {
+          ...station,
+          progress: stationValue || 0,
+          volume: stationValue || 0,
+        };
+      }
+      return station;
+    });
+    setStations(updatedStations);
+
+    localStorage.setItem("stations", JSON.stringify(updatedStations));
+
+    setOpenModalPedidoColeta(false);
     setValueStation(0);
   };
 
@@ -143,6 +170,35 @@ export const PainelDeControle = () => {
                     </>
                   }
                 />
+                <Box marginTop={2}>
+                  {value.volume >= 80 && (
+                    <>
+                      <Stack
+                        sx={{ width: "100%" }}
+                        spacing={2}
+                        border={"1px solid #c1c1c1"}
+                      >
+                        <Alert severity="warning">{`Estação ${value.id}: Está com ${value.volume}% de ocupação.`}</Alert>
+                      </Stack>
+                      <Box
+                        display={"flex"}
+                        justifyContent={"center"}
+                        marginTop={1}
+                      >
+                        <Button
+                          color="error"
+                          variant="contained"
+                          onClick={() =>
+                            handleOpenModalPedidoColeta(value.nomeEstacao)
+                          }
+                          fullWidth
+                        >
+                          Gerar pedido de coleta
+                        </Button>
+                      </Box>
+                    </>
+                  )}
+                </Box>
               </Grid>
             ))}
           </Grid>
@@ -177,6 +233,41 @@ export const PainelDeControle = () => {
               </Button>
               <ButtonAction variant="contained" onClick={handleSubmitValue}>
                 Aplicar
+              </ButtonAction>
+            </Box>
+          </>
+        }
+      />
+      <CustomModal
+        open={openModalPedidoColeta}
+        onClose={handleCloseModalColeta}
+        title={`Deseja realmente fazer coleta da ${dataStationColeta}?`}
+        titleTooltip=""
+        placement="bottom"
+        showTooltip={false}
+        content={
+          <>
+            <Box
+              display={"flex"}
+              justifyContent={"flex-end"}
+              alignItems={"center"}
+              gap={"20px"}
+              paddingTop={4}
+            >
+              <Button
+                variant="contained"
+                color="error"
+                onClick={handleCloseModalColeta}
+                fullWidth
+              >
+                NÃO
+              </Button>
+              <ButtonAction
+                variant="contained"
+                onClick={() => handleUpdateColeta(valueStation)}
+                fullWidth
+              >
+                SIM
               </ButtonAction>
             </Box>
           </>

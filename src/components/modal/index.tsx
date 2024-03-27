@@ -8,7 +8,7 @@ const style = {
   top: "40%",
   left: "50%",
   transform: "translate(-50%, -50%)",
-  width: 500,
+  width: 600,
   bgcolor: "background.paper",
   boxShadow: "box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;",
   borderRadius: "5px",
@@ -36,6 +36,7 @@ interface ModalProps {
     | "top-end"
     | "top-start"
     | undefined;
+  showTooltip?: boolean;
 }
 
 export default function CustomModal({
@@ -45,6 +46,7 @@ export default function CustomModal({
   content,
   titleTooltip,
   placement,
+  showTooltip = true,
 }: ModalProps) {
   return (
     <Modal
@@ -54,7 +56,7 @@ export default function CustomModal({
       aria-describedby="modal-modal-description"
     >
       <Box sx={style}>
-        <Box display={"flex"}>
+        <Box display={"flex"} alignItems={"center"}>
           <Typography
             id="modal-modal-title"
             variant="h6"
@@ -63,11 +65,13 @@ export default function CustomModal({
           >
             {title}
           </Typography>
-          <Tooltip title={titleTooltip} placement={placement}>
-            <Button style={{ paddingLeft: 0 }}>
-              <img src="/info-icon.svg" width={25} />
-            </Button>
-          </Tooltip>
+          {showTooltip && (
+            <Tooltip title={titleTooltip} placement={placement}>
+              <Button style={{ paddingLeft: 0 }}>
+                <img src="/info-icon.svg" width={25} />
+              </Button>
+            </Tooltip>
+          )}
         </Box>
         <Box>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
