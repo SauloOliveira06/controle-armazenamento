@@ -1,8 +1,10 @@
 import { Box } from "@mui/material";
 import { HeaderComponent, Logo } from "./styles";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 export const Header = () => {
+  const { t } = useTranslation();
   return (
     <HeaderComponent>
       <Logo>
@@ -19,9 +21,9 @@ export const Header = () => {
         paddingRight={"30px"}
         className="content-link"
       >
-        <Link to="/painel-controle">Painel de Controle</Link>
-        <Link to="/historico">Histórico</Link>
-        <Link to="/configuracoes">Configurações</Link>
+        <Link to="/painel-controle">{t("control-panel")}</Link>
+        <Link to="/historico">{t("history")}</Link>
+        <Link to="/configuracoes">{t("settings")}</Link>
       </Box>
     </HeaderComponent>
   );
