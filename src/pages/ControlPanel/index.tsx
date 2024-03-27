@@ -2,17 +2,26 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { Alert, Button, Grid, Paper, Stack, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
-import { ButtonAction } from "./styles";
+import {
+  BackgroundOverlay,
+  ButtonAction,
+  SuccessAnimationContainer,
+} from "./styles";
 import CustomModal from "../../components/modal";
 import { CircularProgressWithLabel } from "../../components/CircularProgress";
+import Lottie from "react-lottie";
+import successAnimationData from "../../assets/success-animation.json";
 import { StationProps } from "./types";
+import { useTranslation } from "react-i18next";
 
 export const PainelDeControle = () => {
+  const { t } = useTranslation();
   const [openModal, setOpenModal] = useState(false);
   const [dataStation, setDataStation] = useState("");
   const [dataStationColeta, setDataStationColeta] = useState("");
   const [valueStation, setValueStation] = useState<number>();
   const [openModalPedidoColeta, setOpenModalPedidoColeta] = useState(false);
+  const [coletaConfirmada, setColetaConfirmada] = useState(false);
   const [stations, setStations] = useState<StationProps[]>(() => {
     const savedStations = JSON.parse(localStorage.getItem("stations") || "[]");
     if (savedStations.length > 0) {
@@ -126,6 +135,14 @@ export const PainelDeControle = () => {
     localStorage.setItem("stations", JSON.stringify(stations));
   }, [stations]);
 
+  const handleConfirmColeta = () => {
+    setColetaConfirmada(true);
+
+    setTimeout(() => {
+      setColetaConfirmada(false);
+    }, 3000);
+  };
+
   return (
     <>
       <Grid sx={{ flexGrow: 1 }} container spacing={8} marginTop={10}>
@@ -136,7 +153,7 @@ export const PainelDeControle = () => {
                 <Paper
                   sx={{
                     height: 340,
-                    width: 400,
+                    width: 300,
                     backgroundColor: (theme) =>
                       theme.palette.mode === "dark" ? "#1A2027" : "#fff",
                     display: "flex",
@@ -148,7 +165,12 @@ export const PainelDeControle = () => {
                   children={
                     <>
                       <Box display={"flex"} margin={"1em auto auto 1em"}>
-                        <Typography variant="h5" gutterBottom fontWeight={400}>
+                        <Typography
+                          variant="h5"
+                          gutterBottom
+                          fontWeight={400}
+                          color={"#5c5c5c"}
+                        >
                           {value.nomeEstacao}
                         </Typography>
                       </Box>
@@ -164,7 +186,7 @@ export const PainelDeControle = () => {
                           variant="contained"
                           onClick={() => handleOpenModal(value.nomeEstacao)}
                         >
-                          Aplicar Valor
+                          {t("apply-value")}
                         </ButtonAction>
                       </Box>
                     </>
@@ -178,7 +200,7 @@ export const PainelDeControle = () => {
                         spacing={2}
                         border={"1px solid #c1c1c1"}
                       >
-                        <Alert severity="warning">{`Estação ${value.id}: Está com ${value.volume}% de ocupação.`}</Alert>
+                        <Alert severity="warning">{`Estação ${value.id} ${t("warning-message")}`}</Alert>
                       </Stack>
                       <Box
                         display={"flex"}
@@ -193,7 +215,7 @@ export const PainelDeControle = () => {
                           }
                           fullWidth
                         >
-                          Gerar pedido de coleta
+                          {t("request-collect")}
                         </Button>
                       </Box>
                     </>
@@ -207,15 +229,15 @@ export const PainelDeControle = () => {
       <CustomModal
         open={openModal}
         onClose={handleCloseModal}
-        title={`Informe o valor para ${dataStation}`}
-        titleTooltip="Você deve informar o valor da porcentagem para a respectiva estação!"
+        title={`${t("enter-value")} ${dataStation}`}
+        titleTooltip={t("info-the-value")}
         placement="bottom"
         content={
           <>
             <TextField
               id="value"
               type="number"
-              label="Valor"
+              label={t("value")}
               variant="outlined"
               value={valueStation || 0}
               onChange={(e) => setValueStation(parseFloat(e.target.value) || 0)}
@@ -229,10 +251,10 @@ export const PainelDeControle = () => {
               paddingTop={4}
             >
               <Button variant="outlined" onClick={handleCloseModal}>
-                Cancelar
+                {t("cancel")}
               </Button>
               <ButtonAction variant="contained" onClick={handleSubmitValue}>
-                Aplicar
+                {t("apply")}
               </ButtonAction>
             </Box>
           </>
@@ -241,7 +263,7 @@ export const PainelDeControle = () => {
       <CustomModal
         open={openModalPedidoColeta}
         onClose={handleCloseModalColeta}
-        title={`Deseja realmente fazer coleta da ${dataStationColeta}?`}
+        title={`${t("confirm-collect")} ${dataStationColeta}?`}
         titleTooltip=""
         placement="bottom"
         showTooltip={false}
@@ -260,19 +282,49 @@ export const PainelDeControle = () => {
                 onClick={handleCloseModalColeta}
                 fullWidth
               >
-                NÃO
+                {t("no")}
               </Button>
               <ButtonAction
                 variant="contained"
-                onClick={() => handleUpdateColeta(valueStation)}
+                onClick={() => {
+                  handleUpdateColeta(valueStation);
+                  handleConfirmColeta();
+                }}
                 fullWidth
               >
-                SIM
+                {t("yes")}
               </ButtonAction>
             </Box>
           </>
         }
       />
+      {coletaConfirmada && (
+        <>
+          <BackgroundOverlay />
+          <SuccessAnimationContainer>
+            <Lottie
+              options={{
+                loop: false,
+                autoplay: true,
+                animationData: successAnimationData,
+                rendererSettings: {
+                  preserveAspectRatio: "xMidYMid slice",
+                },
+              }}
+              width={200}
+              height={200}
+            />
+            <Typography
+              variant="h3"
+              gutterBottom
+              fontWeight={400}
+              color={"#FFFFFF"}
+            >
+              Coleta feita com sucesso!
+            </Typography>
+          </SuccessAnimationContainer>
+        </>
+      )}
     </>
   );
 };

@@ -62,6 +62,7 @@ export default function CustomModal({
             variant="h6"
             component="h2"
             fontWeight={"600"}
+            color={"#3c3c3c"}
           >
             {title}
           </Typography>
